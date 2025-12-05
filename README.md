@@ -40,10 +40,7 @@ CSE473s_NeuralLib/
 - **Dense Layer**: Full forward and backward pass with proper gradient computation
 - **Activations**: ReLU, Sigmoid, Tanh with correct derivatives
 - **Loss Function**: MSE with correct gradient scaling
-- **Optimizer**: Stochastic Gradient Descent (SGD) in separate `lib/optimizer.py`
-  - Separated from layer implementation (clean architecture)
-  - Handles weight updates: W = W - learning_rate * grad_weights
-  - Proper gradient accumulation for batch processing
+- **Optimizer**: Stochastic Gradient Descent (SGD)
 
 ### Validation
 - Gradient checking (numerical vs. analytical gradients)
