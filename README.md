@@ -22,7 +22,7 @@ CSE473s_NeuralLib/
 │   ├── activations.py            # ReLU, Sigmoid, Tanh activations
 │   ├── losses.py                 # Mean Squared Error (MSE) loss
 │   ├── network.py                # Sequential model class
-│   └── optimizer.py              # SGD optimizer (separated from layers)
+│   └── optimizer.py              # SGD optimizer
 ├── notebooks/
 │   └── project_demo.ipynb        # Gradient check & XOR training
 ├── report/
