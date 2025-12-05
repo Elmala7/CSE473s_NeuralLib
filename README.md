@@ -10,7 +10,7 @@ A NumPy-based neural network library built from scratch for educational purposes
 
 - ✅ Gradient checking verified (difference = 2.81e-12)
 - ✅ XOR problem solved with 100% accuracy
-- ✅ Final loss: 0.000030051
+- ✅ Final loss: 0.00003
 - ✅ Predictions: [0, 1, 1, 0] (perfect match)
 
 ## Project Structure
