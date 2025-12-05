@@ -36,13 +36,13 @@ The model successfully converged to a near-zero loss, correctly classifying all 
 
 | Input A | Input B | Target | Predicted Probability | Rounded Prediction |
 | :--- | :--- | :--- | :--- | :--- |
-| 0 | 0 | **0** | 0.0016 | **0** |
-| 0 | 1 | **1** | 0.9972 | **1** |
-| 1 | 0 | **1** | 0.9974 | **1** |
-| 1 | 1 | **0** | 0.0031 | **0** |
+| 0 | 0 | **0** | 0.003440 | **0** |
+| 0 | 1 | **1** | 0.994145 | **1** |
+| 1 | 0 | **1** | 0.994501 | **1** |
+| 1 | 1 | **0** | 0.006622 | **0** |
 
-* **Final Loss:** ~0.000007
-* **Gradient Check:** Passed with a difference of $1.13 \times 10^{-12}$, verifying the correctness of the backpropagation engine.
+* **Final Loss:** 0.000030051
+* **Gradient Check:** Passed with a difference of $2.81 \times 10^{-12}$, verifying the correctness of the backpropagation engine.
 
 ### 2.3 Conclusion
 The library correctly handles forward propagation, backpropagation, and parameter updates, solving the non-linear XOR task with 100% accuracy.

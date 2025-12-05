@@ -8,9 +8,9 @@ A NumPy-based neural network library built from scratch for educational purposes
 
 **Part 1: Core Library & Validation ✅ COMPLETE**
 
-- ✅ Gradient checking verified (difference < 1e-13)
+- ✅ Gradient checking verified (difference = 2.81e-12)
 - ✅ XOR problem solved with 100% accuracy
-- ✅ Final loss: ~0.000007
+- ✅ Final loss: 0.000030051
 - ✅ Predictions: [0, 1, 1, 0] (perfect match)
 
 ## Project Structure
@@ -54,9 +54,9 @@ CSE473s_NeuralLib/
 
 | Task | Result |
 |------|--------|
-| Gradient Check | ✅ PASSED (diff < 1e-13) |
+| Gradient Check | ✅ PASSED (diff = 2.81e-12) |
 | XOR Accuracy | ✅ 100% |
-| Final Loss | 0.000007 |
+| Final Loss | 0.000030051 |
 | Training Epochs | 10,000 |
 | Best Learning Rate | 1.0 |
 | Weight Initialization | He initialization |
