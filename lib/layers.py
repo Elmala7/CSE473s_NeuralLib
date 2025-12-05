@@ -19,8 +19,8 @@ class Dense(Layer):
         # He initialization for better convergence
         self.weights = np.random.randn(input_size, output_size) * np.sqrt(2.0 / input_size)
         self.bias = np.zeros((1, output_size))
-        self.dW = None
-        self.db = None
+        self.grad_weights = None
+        self.grad_bias = None
 
     def forward(self, input):
         self.input = input
@@ -32,11 +32,12 @@ class Dense(Layer):
         bias_gradient = np.sum(output_gradient, axis=0, keepdims=True)
         input_gradient = np.dot(output_gradient, self.weights.T)
 
-        self.dW = weights_gradient
-        self.db = bias_gradient
-        
-        if learning_rate > 0:
-            self.weights -= learning_rate * weights_gradient
-            self.bias -= learning_rate * bias_gradient
+        # Accumulate gradients (add to existing, don't overwrite)
+        if self.grad_weights is None:
+            self.grad_weights = weights_gradient
+            self.grad_bias = bias_gradient
+        else:
+            self.grad_weights += weights_gradient
+            self.grad_bias += bias_gradient
         
         return input_gradient

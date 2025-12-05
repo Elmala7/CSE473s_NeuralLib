@@ -15,7 +15,8 @@
 - [x] **Activations:** Implement derivatives ($f'(x)$) in `backward()` methods.
 - [x] **Dense:** Implement Chain Rule for $dW$, $db$, and $dX$.
 - [x] [cite_start]**Loss:** Implement `MSE` class (loss calculation + gradient)[cite: 32].
-- [x] [cite_start]**Optimizer:** Implement `SGD` to update weights ($W = W - \eta \cdot dW$)[cite: 35].
+- [x] [cite_start]**Optimizer:** Implement `SGD` in separate `lib/optimizer.py` to update weights ($W = W - \eta \cdot dW$)[cite: 35].
+- [x] **Gradient Accumulation:** Properly accumulate gradients across batch samples in each epoch.
 
 ### Step 4: Verification (The "Must-Haves")
 - [x] **Gradient Check:** Write a script in the notebook to compare your manual gradient vs. numerical gradient $(f(x+\epsilon) - f(x-\epsilon))/2\epsilon$. [cite_start]**This proves your library works** [cite: 60-61].

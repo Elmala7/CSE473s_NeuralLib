@@ -1,4 +1,5 @@
 import numpy as np
+from lib.optimizer import SGD
 
 class Sequential:
     def __init__(self):
@@ -25,8 +26,15 @@ class Sequential:
 
     def train(self, x_train, y_train, epochs, learning_rate):
         samples = len(x_train)
+        optimizer = SGD(learning_rate)
 
         for i in range(epochs):
+            # Reset gradients at start of epoch
+            for layer in self.layers:
+                if hasattr(layer, 'grad_weights'):
+                    layer.grad_weights = None
+                    layer.grad_bias = None
+            
             err = 0
             for j in range(samples):
                 # Forward pass
@@ -42,6 +50,10 @@ class Sequential:
                 error = self.loss.loss_prime(y_sample, output)
                 for layer in reversed(self.layers):
                     error = layer.backward(error, learning_rate)
+
+            # Apply optimizer to update weights
+            for layer in self.layers:
+                optimizer.step(layer)
 
             # Calculate average error
             err /= samples

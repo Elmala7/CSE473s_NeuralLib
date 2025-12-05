@@ -21,14 +21,15 @@ CSE473s_NeuralLib/
 │   ├── layers.py                 # Dense layer implementation
 │   ├── activations.py            # ReLU, Sigmoid, Tanh activations
 │   ├── losses.py                 # Mean Squared Error (MSE) loss
-│   └── network.py                # Sequential model class
+│   ├── network.py                # Sequential model class
+│   └── optimizer.py              # SGD optimizer (separated from layers)
 ├── notebooks/
 │   └── project_demo.ipynb        # Gradient check & XOR training
 ├── report/
 │   └── part1_summary.md          # Part 1 results summary
 ├── Docs/
-│   ├── specification.md          # Project specifications
-│   └── TODO.md                   # Task tracking
+│   ├── CSE473s_specifications.md # Project specifications
+│   └── CSE473s_todo.md           # Task tracking
 ├── README.md                     # This file
 └── .gitignore                    # Git ignore rules
 ```
@@ -36,13 +37,16 @@ CSE473s_NeuralLib/
 ## Features Implemented
 
 ### Mathematical Engine
-- **Dense Layer**: Full forward and backward pass with SGD updates
-- **Activations**: ReLU, Sigmoid, Tanh with proper derivatives
-- **Loss Function**: MSE with correct gradient computation
-- **Optimizer**: Stochastic Gradient Descent with He initialization
+- **Dense Layer**: Full forward and backward pass with proper gradient computation
+- **Activations**: ReLU, Sigmoid, Tanh with correct derivatives
+- **Loss Function**: MSE with correct gradient scaling
+- **Optimizer**: Stochastic Gradient Descent (SGD) in separate `lib/optimizer.py`
+  - Separated from layer implementation (clean architecture)
+  - Handles weight updates: W = W - learning_rate * grad_weights
+  - Proper gradient accumulation for batch processing
 
 ### Validation
-- Gradient checking (numerical vs. analytical)
+- Gradient checking (numerical vs. analytical gradients)
 - XOR problem as benchmark task
 - 100% training accuracy achieved
 
@@ -77,6 +81,7 @@ from lib.layers import Dense
 from lib.activations import Tanh, Sigmoid
 from lib.losses import MSE
 from lib.network import Sequential
+from lib.optimizer import SGD
 import numpy as np
 
 # Create model

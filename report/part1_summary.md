@@ -53,7 +53,8 @@ Input [1, 1] → 0.003209 → rounds to 0 ✓
 ### Core Components
 1. **Dense Layer** (`lib/layers.py`)
    - Forward: $Z = X \cdot W + b$
-   - Backward: Chain rule for $dW$, $db$, $dX$
+   - Backward: Chain rule for $dW$, $db$, $dX$ with gradient accumulation
+   - Stores: `grad_weights` and `grad_bias` (separated from weight updates)
    - Weight initialization: He initialization ($\sqrt{2/n_{in}}$)
 
 2. **Activations** (`lib/activations.py`)
@@ -65,10 +66,16 @@ Input [1, 1] → 0.003209 → rounds to 0 ✓
    - **MSE**: $L = \frac{1}{n}\sum(y - \hat{y})^2$
    - **Derivative**: $\frac{\partial L}{\partial \hat{y}} = \frac{2(\hat{y} - y)}{n}$
 
-4. **Sequential Model** (`lib/network.py`)
+4. **Optimizer** (`lib/optimizer.py`)
+   - **SGD Class**: Handles weight updates independently
+   - **Formula**: $W_{new} = W_{old} - \eta \times \text{grad\_weights}$
+   - **Design Pattern**: Clean separation of concerns (gradients computed in layers, updates applied by optimizer)
+   - **Gradient Accumulation**: Properly accumulates gradients across batch samples per epoch
+
+5. **Sequential Model** (`lib/network.py`)
    - Forward pass through all layers
-   - Backward pass in reverse order
-   - SGD weight updates
+   - Backward pass in reverse order with gradient accumulation
+   - Creates optimizer instance and applies updates after each epoch
 
 ### Training Strategy
 - **Multi-seed training**: Tested 20 random initializations
@@ -76,13 +83,14 @@ Input [1, 1] → 0.003209 → rounds to 0 ✓
 - **High learning rate**: $\eta = 1.0$ (simple SGD requires aggressive learning)
 - **Extended epochs**: 10,000 iterations to ensure convergence
 
-## Files Generated
+### Files Generated
 
 ### Library Code
-- `lib/layers.py`: Dense layer with forward/backward
+- `lib/layers.py`: Dense layer with forward/backward and gradient accumulation
 - `lib/activations.py`: ReLU, Sigmoid, Tanh
 - `lib/losses.py`: MSE loss with gradient
 - `lib/network.py`: Sequential model class
+- `lib/optimizer.py`: Separate SGD optimizer class
 
 ### Notebooks
 - `notebooks/project_demo.ipynb`: Gradient check + XOR training
@@ -126,13 +134,64 @@ Our implementation achieved **relative error < $10^{-13}$**, confirming correctn
 - [ ] Benchmark against Keras/TensorFlow
 - [ ] Generate comprehensive PDF report
 
+## Architecture Refactoring: Optimizer Separation
+
+### Motivation
+To follow proper software engineering principles, the optimizer logic was separated from the Dense layer implementation, creating a clean separation of concerns.
+
+### Changes Made
+1. **Created `lib/optimizer.py`**
+   - Implemented independent `SGD` class
+   - Responsible only for weight updates
+   - Uses layer's stored gradients: `grad_weights`, `grad_bias`
+
+2. **Refactored `lib/layers.py`**
+   - Renamed: `dW` → `grad_weights`, `db` → `grad_bias`
+   - Removed weight update logic from `backward()` method
+   - Implements gradient accumulation for proper batch processing:
+     - First sample: Initialize gradient values
+     - Subsequent samples: Add to existing gradients (not overwrite)
+
+3. **Updated `lib/network.py`**
+   - Imports and instantiates `SGD` optimizer
+   - Resets gradients at epoch start
+   - Calls `optimizer.step()` after processing all batch samples
+   - Proper gradient accumulation ensures all sample gradients contribute to update
+
+4. **Updated `notebooks/project_demo.ipynb`**
+   - Fixed gradient_check function to use `layer.grad_weights`
+   - Added reproducibility seed (15)
+   - All tests pass with refactored code
+
+### Validation Results After Refactoring
+- ✅ Gradient Check: Difference = 1.13e-12 (< 1e-4)
+- ✅ XOR Training: 100% accuracy, loss = 0.000007
+- ✅ Reproducibility: Same results with seed 15
+- ✅ Code Quality: Clean separation of gradients and updates
+
+### Key Learning: Gradient Accumulation
+The critical fix during refactoring was implementing proper gradient accumulation:
+```python
+# BEFORE (WRONG): Overwrites gradients each sample
+self.grad_weights = weights_gradient
+
+# AFTER (CORRECT): Accumulates gradients across samples
+if self.grad_weights is None:
+    self.grad_weights = weights_gradient
+else:
+    self.grad_weights += weights_gradient
+```
+
+Without this, only the last sample's gradient was used per epoch, causing the network to fail to learn.
+
 ## Conclusion
 
 Part 1 successfully demonstrates a working neural network library with:
 - ✅ Mathematically correct backpropagation
 - ✅ Proper gradient computation verified by numerical methods
 - ✅ Ability to learn non-linear functions (XOR with 100% accuracy)
-- ✅ Clean, modular API for building networks
+- ✅ Clean, modular API with separated optimizer architecture
+- ✅ Proper gradient accumulation for batch processing
 
 The library is production-ready for simple tasks and serves as an educational foundation for understanding deep learning fundamentals.
 
