@@ -101,7 +101,3 @@ predictions = model.predict(X)
 ## Author
 
 Zaid Reda
-
-## License
-
-MIT
