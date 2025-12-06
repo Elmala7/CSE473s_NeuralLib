@@ -1,0 +1,210 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{booktabs}
+
+\geometry{a4paper, margin=1in}
+
+% Code highlighting configuration
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\Large \textbf{AIN SHAMS UNIVERSITY}}\\[0.2cm]
+    {\Large \textbf{FACULTY OF ENGINEERING}}\\[0.2cm]
+    {\large Senior-2 Mechatronics}\\[0.2cm]
+    {\large CSE473s: Computational Intelligence}\\[0.2cm]
+    {\large Fall 2025}\\[2.0cm]
+    
+    {\huge \textbf{Part 1 Project Report}}\\[0.5cm]
+    {\Large \textbf{Library Implementation, Initial Test and Validation}}\\[2.0cm]
+    
+    {\Large \textbf{Team 15}}\\[1.0cm]
+    
+    \begin{table}[h]
+        \centering
+        \large
+        \begin{tabular}{llc}
+            \textbf{Name} & \textbf{ID} & \textbf{Section} \\
+            Abdelrhman Tarek Mohamed & 2101547 & Sec.1 \\
+            Ahmed Mahmoud AbdelAzeem & 2100718 & Sec.1 \\
+            El mahdy Salih & 2101875 & Sec.1 \\
+            Mahmoud Atef & 2001313 & Sec.1 \\
+            Zaid Reda Farouk & 2101603 & Sec.1 \\
+        \end{tabular}
+    \end{table}
+    
+    \vfill
+    
+    {\large \textbf{Submitted to:}}\\[0.2cm]
+    {\Large Eng. Abdallah Mohamed}\\[2.0cm]
+    
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The objective of this project ("Part 1") is to build a foundational neural network library to deepen understanding of forward and backward propagation algorithms. The library is designed to be modular, allowing for the construction of sequential models. Key deliverables for this phase include the core library structure, gradient checking validation, and solving the XOR problem as a proof of concept.
+
+\section{Library Architecture and Design}
+The library is structured into modular Python files within the \texttt{lib/} directory. The design favors simplicity and clarity while ensuring mathematical correctness.
+
+\subsection{Repository Structure}
+The following directory tree illustrates the organization of the project:
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+.
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── lib/
+│   ├── __init__.py
+│   ├── layers.py       # Dense layer implementation
+│   ├── activations.py  # ReLU, Sigmoid, Tanh
+│   ├── losses.py       # MSE Loss
+│   ├── optimizer.py    # SGD Optimizer
+│   └── network.py      # Sequential model class
+├── notebooks/
+│   └── project_demo.ipynb  # Demos: Gradient Check, XOR, Autoencoder
+└── report/
+    └── Part1_Report.pdf
+\end{lstlisting}
+
+\subsection{Layer Abstraction (\texttt{lib.layers})}
+All layers inherit from a base \texttt{Layer} class, which defines the interface for \texttt{forward} and \texttt{backward} passes.
+\begin{itemize}
+    \item \textbf{Dense Layer}: Implements a fully connected layer.
+    \item \textbf{Initialization}: He initialization is used for weights to verify better convergence ($W \sim \mathcal{N}(0, \sqrt{2/n_{in}})$).
+    \item \textbf{Gradient Accumulation}: The layer supports gradient accumulation to handle batch processing correctly.
+\end{itemize}
+
+\subsection{Activation Functions (\texttt{lib.activations})}
+Activation functions are implemented as subclasses of \texttt{Layer} to integrate seamlessly into the computation graph.
+\begin{itemize}
+    \item \textbf{ReLU}: $f(x) = \max(0, x)$
+    \item \textbf{Sigmoid}: $f(x) = \frac{1}{1 + e^{-x}}$
+    \item \textbf{Tanh}: $f(x) = \tanh(x)$
+\end{itemize}
+
+\subsection{Loss Function (\texttt{lib.losses})}
+The \textbf{Mean Squared Error (MSE)} is implemented to measure the discrepancy between predictions and targets.
+\[ L = \frac{1}{N} \sum (Y_{true} - Y_{pred})^2 \]
+The class provides both \texttt{loss} (forward) and \texttt{loss\_prime} (gradient w.r.t prediction) methods.
+
+\subsection{Optimizer (\texttt{lib.optimizer})}
+\textbf{Stochastic Gradient Descent (SGD)} is used to update parameters. The \texttt{step} method updates weights and biases using the computed gradients and a specified learning rate.
+\[ W_{new} = W_{old} - \eta \frac{\partial L}{\partial W} \]
+
+\subsection{Network Model (\texttt{lib.network})}
+The \texttt{Sequential} class acts as a container for layers. It manages:
+\begin{itemize}
+    \item \textbf{Forward Pass}: Sequentially passing input through all layers.
+    \item \textbf{Training Loop}: Iterating through epochs, performing forward/backward passes, and invoking the optimizer.
+\end{itemize}
+
+\section{Validation and Testing}
+
+\subsection{Gradient Checking}
+To ensure the correctness of the analytical backpropagation, we performed a gradient check comparing the analytical gradients against numerical gradients computed via finite differences.
+\begin{align*}
+    \frac{\partial L}{\partial W} \approx \frac{L(W + \epsilon) - L(W - \epsilon)}{2\epsilon}
+\end{align*}
+\textbf{Results:}
+\begin{itemize}
+    \item \textbf{Analytic Gradient}: \texttt{[[-2.07469049], [-0.43725958]]}
+    \item \textbf{Relative Difference}: $2.81 \times 10^{-12}$
+\end{itemize}
+The extremely small difference confirms the implementation of backpropagation is correct.
+
+\subsection{XOR Problem Validation}
+The XOR function is a classic non-linear classification problem that requires a multi-layer perceptron to solve.
+
+\subsubsection{Network Architecture}
+A 2-layer network was constructed:
+\begin{enumerate}
+    \item \textbf{Input Layer}: 2 neurons
+    \item \textbf{Hidden Layer}: Dense(16 units) + Tanh activation
+    \item \textbf{Output Layer}: Dense(1 unit) + Sigmoid activation
+\end{enumerate}
+
+\subsubsection{Training Parameters}
+\begin{itemize}
+    \item \textbf{Epochs}: 10,000
+    \item \textbf{Learning Rate}: 1.0
+    \item \textbf{Loss Function}: MSE
+\end{itemize}
+
+\subsubsection{Results}
+The network successfully converged, achieving a final loss of approximately $\mathbf{0.00003}$.
+
+\paragraph{Training Log}
+Below is a snippet of the training progress showing the reduction in error over epochs:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+Training XOR Network
+==================================================
+Epoch 1/10000       error=0.270882
+...
+Epoch 1001/10000    error=0.000429
+...
+Epoch 5001/10000    error=0.000064
+...
+Epoch 9901/10000    error=0.000030
+==================================================
+Training Complete
+\end{lstlisting}
+
+\begin{table}[H]
+\centering
+\caption{Final Predictions on XOR Dataset}
+\begin{tabular}{cccc}
+\toprule
+\textbf{Input (x1, x2)} & \textbf{Truth (y)} & \textbf{Predicted Probability} & \textbf{Rounded Prediction} \\
+\midrule
+(0, 0) & 0 & 0.003440 & 0 \\
+(0, 1) & 1 & 0.994145 & 1 \\
+(1, 0) & 1 & 0.994501 & 1 \\
+(1, 1) & 0 & 0.006622 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The model achieved \textbf{100\% accuracy} on the XOR dataset, validating the capability of the library to learn non-linear decision boundaries.
+
+\section{Conclusion}
+The core neural network library has been successfully implemented and verified. The modular design allows for easy extension, and the gradient checking and XOR tests provide strong evidence of its correctness. This foundation is ready for more complex tasks such as the Autoencoder implementation planned for Part 2.
+
+\end{document}
