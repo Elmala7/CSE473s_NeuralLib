@@ -5,9 +5,10 @@ class SGD:
         
         self.learning_rate = learning_rate
     
-    def step(self, layer):
-
+    def step(self, layer, batch_size=1):
+        
         if hasattr(layer, 'grad_weights') and hasattr(layer, 'grad_bias'):
             if layer.grad_weights is not None:
-                layer.weights -= self.learning_rate * layer.grad_weights
-                layer.bias -= self.learning_rate * layer.grad_bias
+                # Normalize gradients by batch size for proper mini-batch training
+                layer.weights -= self.learning_rate * (layer.grad_weights / batch_size)
+                layer.bias -= self.learning_rate * (layer.grad_bias / batch_size)
