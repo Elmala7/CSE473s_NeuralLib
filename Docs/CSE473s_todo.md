@@ -26,15 +26,23 @@
 ## ---------------- PART 2 ----------------
 
 ### Step 5: Autoencoder (MNIST)
-- [ ] **Data:** Load and normalize MNIST (using sklearn or keras just for loading).
-- [ ] **Train:** Build 784->Latent->784 net. [cite_start]Train with MSE (Input = Target)[cite: 48].
-- [ ] **Viz:** Show "Input Image" vs "Reconstructed Image" in notebook.
+- [x] **Data:** Load and normalize MNIST (using sklearn or keras just for loading).
+- [x] **Train:** Build 784->Latent->784 net. [cite_start]Train with MSE (Input = Target)[cite: 48].
+- [x] **Viz:** Show "Input Image" vs "Reconstructed Image" in notebook.
 
 ### Step 6: SVM Classification
-- [ ] **Extract:** Run test set through Encoder -> Get Latent Vectors.
-- [ ] [cite_start]**Classify:** Train SVM on Latent Vectors -> Get Accuracy[cite: 51].
-- [ ] **Analyze:** Generate Confusion Matrix.
+- [x] **Extract:** Run test set through Encoder -> Get Latent Vectors.
+- [x] [cite_start]**Classify:** Train SVM on Latent Vectors -> Get Accuracy[cite: 51].
+- [x] **Analyze:** Generate Confusion Matrix.
 
 ### Step 7: Keras Comparison & Report
-- [ ] **Benchmark:** Build XOR/Autoencoder in Keras. [cite_start]Compare speed/loss[cite: 66].
-- [ ] [cite_start]**Report:** Write PDF covering Design, XOR results, Autoencoder quality, SVM results, and Comparison[cite: 111].
+- [x] **Benchmark:** Build XOR/Autoencoder in Keras. [cite_start]Compare speed/loss[cite: 66].
+- [x] [cite_start]**Report:** Write PDF covering Design, XOR results, Autoencoder quality, SVM results, and Comparison[cite: 111].
+
+---
+
+✅ **Project Complete & Verified**
+- All 7 steps implemented and tested
+- Library demonstrates forward/backward propagation, optimization, and feature learning
+- Fair benchmarks against TensorFlow/Keras completed
+- Ready for project submission
