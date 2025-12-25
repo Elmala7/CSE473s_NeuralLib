@@ -6,12 +6,11 @@ A NumPy-based neural network library built from scratch for educational purposes
 
 ## Current Status
 
-**Part 1: Core Library & Validation ✅ COMPLETE**
+**Project: COMPLETE ✅**
 
-- ✅ Gradient checking verified (difference = 2.81e-12)
-- ✅ XOR problem solved with 100% accuracy
-- ✅ Final loss: 0.00003
-- ✅ Predictions: [0, 1, 1, 0] (perfect match)
+- ✅ Part 1 (Core library & verification): Gradient checking passed (diff = 2.81e-12), XOR solved (100%).
+- ✅ Part 2 (Autoencoder & Analysis): Autoencoder reconstruction MSE (test): **0.007915**; SVM on latent features accuracy: **96.89%**. Keras benchmark reconstruction MSE: **0.002647** (lower but comparable qualitative reconstructions).
+- ✅ Report and notebook: see `report/project_report.md`, `report/Part1_Report.tex`, and `notebooks/project_demo.ipynb`. 
 
 ## Project Structure
 
@@ -47,23 +46,26 @@ CSE473s_NeuralLib/
 - XOR problem as benchmark task
 - 100% training accuracy achieved
 
-## Results (Part 1)
+## Results (Summary)
 
 | Task | Result |
 |------|--------|
 | Gradient Check | ✅ PASSED (diff = 2.81e-12) |
 | XOR Accuracy | ✅ 100% |
-| Final Loss | 0.000030051 |
-| Training Epochs | 10,000 |
+| Final Loss (XOR) | 0.000030051 |
+| Autoencoder (reconstruction MSE, test) | 0.007915 |
+| Autoencoder (Keras reconstruction MSE, test) | 0.002647 |
+| SVM on Latent Features (Accuracy) | 96.89% |
+| Training Epochs (XOR) | 10,000 |
 | Best Learning Rate | 1.0 |
 | Weight Initialization | He initialization |
 
-## Future Work (Part 2)
+## Completed Work (Part 2)
 
-- [ ] Autoencoder on MNIST
-- [ ] SVM classification on latent vectors
-- [ ] Keras/TensorFlow benchmark
-- [ ] Comprehensive performance report
+- ✅ Autoencoder on MNIST (784 -> 128 -> 784). Reconstruction MSE (test): **0.007915**
+- ✅ SVM classification on latent vectors (Accuracy: **96.89%**)
+- ✅ Keras/TensorFlow benchmark completed (Keras MSE: **0.002647**)
+- ✅ Full report and notebook available for reproduction
 
 ## Requirements
 
