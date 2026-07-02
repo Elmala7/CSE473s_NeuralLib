@@ -1,20 +1,81 @@
 # CSE473s: Neural Network Library
 
-## Description
+![Status](https://img.shields.io/badge/Status-Complete-success)
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![NumPy](https://img.shields.io/badge/NumPy-Required-orange)
 
-A NumPy-based neural network library built from scratch for educational purposes. This project implements the core components of a deep learning framework, including layers, activations, loss functions, and a training engine.
+## 📌 Overview
 
-## Current Status
+A NumPy-based neural network library built from scratch for educational purposes. This project implements the core components of a deep learning framework, including dense layers, non-linear activations, loss functions, and an optimizer engine.
 
-**Project: COMPLETE ✅**
+## ✨ Features Implemented
 
-- ✅ Part 1 (Core library & verification): Gradient checking passed (diff = 2.81e-12), XOR solved (100%).
-- ✅ Part 2 (Autoencoder & Analysis): Autoencoder reconstruction MSE (test): **0.007915**; SVM on latent features accuracy: **96.89%**. Keras benchmark reconstruction MSE: **0.002647** (lower but comparable qualitative reconstructions).
-- ✅ Report and notebook: see `report/project_report.md`, `report/Part1_Report.tex`, and `notebooks/project_demo.ipynb`. 
+### Mathematical Engine
+- **Dense Layer**: Full forward and backward pass with proper gradient computation.
+- **Activations**: ReLU, Sigmoid, and Tanh with analytically derived gradients.
+- **Loss Function**: Mean Squared Error (MSE) with correct gradient scaling.
+- **Optimizer**: Stochastic Gradient Descent (SGD).
 
-## Project Structure
+### Validation & Testing
+- **Gradient Checking**: Verifies analytical gradients against numerical approximations.
+- **Benchmarks**: Successfully solves the XOR problem and trains an Autoencoder on the MNIST dataset.
 
+## 🚀 Quick Start
+
+### Requirements
+- Python 3.10+
+- NumPy
+- Jupyter Notebook (optional, for running experiments)
+
+### Example Usage
+
+```python
+import numpy as np
+from lib.network import Sequential
+from lib.layers import Dense
+from lib.activations import Tanh, Sigmoid
+from lib.losses import MSE
+
+# 1. Define Model Architecture
+model = Sequential()
+model.add(Dense(2, 16))
+model.add(Tanh())
+model.add(Dense(16, 1))
+model.add(Sigmoid())
+
+# 2. Configure Loss Function
+model.use_loss(MSE())
+
+# 3. Prepare Data (XOR Problem)
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=np.float32)
+y = np.array([[0], [1], [1], [0]], dtype=np.float32)
+
+# 4. Train
+model.train(X, y, epochs=10000, learning_rate=1.0)
+
+# 5. Predict
+predictions = model.predict(X)
+print(predictions)
 ```
+
+## 📊 Results & Benchmarks
+
+The library has been rigorously tested against standard benchmarks and compared with Keras/TensorFlow implementations.
+
+| Metric / Task | Result |
+|---------------|--------|
+| **Gradient Check (Numerical vs Analytical)** | ✅ PASSED (diff = 2.81e-12) |
+| **XOR Problem Accuracy** | ✅ 100% |
+| **Final Loss (XOR)** | 0.000030051 |
+| **Autoencoder Reconstruction MSE (Custom Lib)** | 0.007915 |
+| **Autoencoder Reconstruction MSE (Keras)** | 0.002647 |
+| **SVM on Latent Features Accuracy** | 96.89% |
+
+*Note: While Keras achieves a lower MSE, the qualitative reconstructions from our custom library are highly comparable. Detailed analyses can be found in the `report/` and `notebooks/` directories.*
+
+## 📁 Project Structure
+
+```text
 CSE473s_NeuralLib/
 ├── lib/                          # Core neural network library
 │   ├── layers.py                 # Dense layer implementation
@@ -22,84 +83,18 @@ CSE473s_NeuralLib/
 │   ├── losses.py                 # Mean Squared Error (MSE) loss
 │   ├── network.py                # Sequential model class
 │   └── optimizer.py              # SGD optimizer
-├── notebooks/
-│   └── project_demo.ipynb        # Gradient check & XOR training
-├── report/
-│   └── part1_summary.md          # Part 1 results summary
-├── Docs/
-│   ├── CSE473s_specifications.md # Project specifications
-│   └── CSE473s_todo.md           # Task tracking
-├── README.md                     # This file
-└── .gitignore                    # Git ignore rules
+├── notebooks/                    # Jupyter notebooks for experiments
+│   └── project_demo.ipynb        # Gradient check, XOR, and Autoencoder demo
+├── report/                       # Project reports and documentation
+│   ├── part1_summary.md          
+│   ├── project_report.md
+│   └── Part1_Report.tex
+├── Docs/                         # Specifications and tasks
+│   ├── CSE473s_specifications.md 
+│   └── CSE473s_todo.md           
+└── README.md                     # This documentation
 ```
 
-## Features Implemented
+## 👨‍💻 Author
 
-### Mathematical Engine
-- **Dense Layer**: Full forward and backward pass with proper gradient computation
-- **Activations**: ReLU, Sigmoid, Tanh with correct derivatives
-- **Loss Function**: MSE with correct gradient scaling
-- **Optimizer**: Stochastic Gradient Descent (SGD)
-
-### Validation
-- Gradient checking (numerical vs. analytical gradients)
-- XOR problem as benchmark task
-- 100% training accuracy achieved
-
-## Results (Summary)
-
-| Task | Result |
-|------|--------|
-| Gradient Check | ✅ PASSED (diff = 2.81e-12) |
-| XOR Accuracy | ✅ 100% |
-| Final Loss (XOR) | 0.000030051 |
-| Autoencoder (reconstruction MSE, test) | 0.007915 |
-| Autoencoder (Keras reconstruction MSE, test) | 0.002647 |
-| SVM on Latent Features (Accuracy) | 96.89% |
-| Training Epochs (XOR) | 10,000 |
-| Best Learning Rate | 1.0 |
-| Weight Initialization | He initialization |
-
-## Completed Work (Part 2)
-
-- ✅ Autoencoder on MNIST (784 -> 128 -> 784). Reconstruction MSE (test): **0.007915**
-- ✅ SVM classification on latent vectors (Accuracy: **96.89%**)
-- ✅ Keras/TensorFlow benchmark completed (Keras MSE: **0.002647**)
-- ✅ Full report and notebook available for reproduction
-
-## Requirements
-
-- Python 3.10+
-- NumPy
-- Jupyter Notebook (for experiments)
-
-## Usage
-
-```python
-from lib.layers import Dense
-from lib.activations import Tanh, Sigmoid
-from lib.losses import MSE
-from lib.network import Sequential
-from lib.optimizer import SGD
-import numpy as np
-
-# Create model
-model = Sequential()
-model.add(Dense(2, 16))
-model.add(Tanh())
-model.add(Dense(16, 1))
-model.add(Sigmoid())
-model.use_loss(MSE())
-
-# Train
-X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=np.float32)
-y = np.array([[0], [1], [1], [0]], dtype=np.float32)
-model.train(X, y, epochs=10000, learning_rate=1.0)
-
-# Predict
-predictions = model.predict(X)
-```
-
-## Author
-
-Zaid Reda
+**Zaid Reda**
